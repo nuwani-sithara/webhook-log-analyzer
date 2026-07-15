@@ -209,7 +209,7 @@ export default function Home() {
       {/* Main Core Body */}
       <main className="max-w-7xl mx-auto px-6 py-6 w-full space-y-6">
         {/* Statistics Panels */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <div className="glass-panel p-4.5 rounded-xl flex items-center gap-4">
             <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-lg">
               <Activity className="h-5 w-5" />
@@ -217,6 +217,18 @@ export default function Home() {
             <div>
               <p className="text-xxs font-semibold uppercase tracking-wider text-slate-500">Transactions</p>
               <p className="text-2xl font-bold text-slate-100">{report.transactions.length}</p>
+            </div>
+          </div>
+
+          <div className="glass-panel p-4.5 rounded-xl flex items-center gap-4 border-l-4 border-l-emerald-500">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg">
+              <CheckCircle className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xxs font-semibold uppercase tracking-wider text-slate-500">Successful Runs</p>
+              <p className="text-2xl font-bold text-emerald-450">
+                {report.transactions.filter(tx => tx.status === 'success' || tx.status === 'warning').length}
+              </p>
             </div>
           </div>
 
@@ -430,15 +442,13 @@ export default function Home() {
                         <td className="px-5 py-3 text-slate-400">{tx.startTime}</td>
                         <td className="px-5 py-3 text-slate-300 font-medium font-mono">{tx.duration} ms</td>
                         <td className="px-5 py-3">
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
-                            tx.status === 'success' 
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                              : tx.status === 'warning' 
-                                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
-                                : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                          }`}>
-                            {tx.status === 'success' ? 'Success' : tx.status === 'warning' ? 'Anomaly' : 'Failure'}
-                          </span>
+                           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                             tx.status === 'error'
+                               ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                               : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                           }`}>
+                             {tx.status === 'error' ? 'Failed' : 'Success'}
+                           </span>
                         </td>
                         <td className="px-5 py-3 text-right">
                           <button

@@ -40,16 +40,16 @@ export default function TransactionFlow({ transaction }: TransactionFlowProps) {
         );
       case 'warning':
         return (
-          <span className="flex items-center gap-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-xs font-semibold">
-            <AlertTriangle className="h-3 w-3" />
-            <span>Anomaly</span>
+          <span className="flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full text-xs font-semibold">
+            <CheckCircle className="h-3 w-3" />
+            <span>Success (Warning)</span>
           </span>
         );
       case 'error':
         return (
           <span className="flex items-center gap-1 bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full text-xs font-semibold">
             <XCircle className="h-3 w-3" />
-            <span>Failure</span>
+            <span>Failed</span>
           </span>
         );
       default:

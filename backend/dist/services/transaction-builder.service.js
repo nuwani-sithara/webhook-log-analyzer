@@ -196,6 +196,13 @@ export class TransactionBuilderService {
                     tx.adtMatchStatus = 'none';
                 }
             }
+            // Determine completion state based on success patterns
+            const isCompleted = this.checkIfCompleted(tx);
+            if (!isCompleted) {
+                tx.errors.push('Transaction flow was abandoned or terminated prematurely before completion.');
+            }
+            hasError = tx.errors.length > 0 || tx.logs.some(l => l.level === 'ERROR');
+            hasWarning = tx.warnings.length > 0 || tx.logs.some(l => l.level === 'WARN');
             // Resolve transaction level status
             if (hasError) {
                 tx.status = 'error';
@@ -216,6 +223,29 @@ export class TransactionBuilderService {
         return transactions
             .filter(tx => tx.logs.length > 0)
             .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+    }
+    static checkIfCompleted(tx) {
+        if (tx.eventType === 'system.logs' || tx.webhookId.startsWith('system-logs')) {
+            return true;
+        }
+        const completionPhrases = [
+            'completed',
+            'census row saved',
+            'recalculated',
+            'released',
+            'webhook completed',
+            'webhook processing completed',
+            'webhook execution terminated',
+            'patient updated',
+            'notification created',
+            'adt match found',
+            'adt matched',
+            'fallback to latest'
+        ];
+        return tx.logs.some(l => {
+            const msgLower = l.message.toLowerCase();
+            return completionPhrases.some(phrase => msgLower.includes(phrase));
+        });
     }
     static createEmptyTransaction(id, log) {
         return {

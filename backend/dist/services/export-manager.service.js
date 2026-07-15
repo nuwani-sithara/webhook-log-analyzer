@@ -114,6 +114,17 @@ export class ExportManagerService {
           <td class="px-6 py-4 font-semibold text-yellow-600">${tx.warnings.length} Warnings</td>
         </tr>
       `).join('');
+        const successRows = report.transactions
+            .filter(tx => tx.status === 'success')
+            .map(tx => `
+        <tr class="hover:bg-emerald-50 text-emerald-950 border-b">
+          <td class="px-6 py-4 font-mono text-sm">${tx.webhookId}</td>
+          <td class="px-6 py-4">${tx.eventType}</td>
+          <td class="px-6 py-4">${tx.patientId || 'N/A'}</td>
+          <td class="px-6 py-4">${tx.facilityId || 'N/A'}</td>
+          <td class="px-6 py-4 font-semibold text-emerald-600">Success (${tx.duration} ms)</td>
+        </tr>
+      `).join('');
         const aiRecs = report.aiSummary.recommendedActions
             .map(rec => `
         <li class="flex items-start mb-2">
@@ -274,6 +285,31 @@ export class ExportManagerService {
                   </thead>
                   <tbody>
                     ${warningRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Transactions Breakdown (Success) -->
+          ${successRows.length > 0 ? `
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden mb-8 print-break">
+              <div class="bg-emerald-600 px-6 py-4">
+                <h3 class="font-bold text-white text-lg">Successful Webhook Transactions</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-slate-100 border-b">
+                      <th class="px-6 py-3 font-semibold text-sm">Webhook ID</th>
+                      <th class="px-6 py-3 font-semibold text-sm">Event Type</th>
+                      <th class="px-6 py-3 font-semibold text-sm">Patient ID</th>
+                      <th class="px-6 py-3 font-semibold text-sm">Facility ID</th>
+                      <th class="px-6 py-3 font-semibold text-sm">Status Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${successRows}
                   </tbody>
                 </table>
               </div>

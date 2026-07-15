@@ -110,12 +110,18 @@ export class AiSummaryService {
         const errorsSubset = errors.slice(0, 10);
         const warningsSubset = warnings.slice(0, 10);
         const dupSubset = duplicateWebhookDetection.slice(0, 5);
+        const successCount = transactions.filter(t => t.status === 'success').length;
+        const avgDuration = transactions.length > 0
+            ? Math.round(transactions.reduce((acc, t) => acc + t.duration, 0) / transactions.length)
+            : 0;
         // Initialize report summary
         let executiveSummary = `## Webhook Integration Health Review
 The system parsed and correlated **${transactions.length}** PointClickCare webhook transactions.
 
-- **Errors:** ${errors.length} issues identified
-- **Warnings:** ${warnings.length} alerts raised
+- **Successful Runs:** ${successCount} transactions processed successfully within SLAs
+- **Average Processing SLA:** ${avgDuration} ms
+- **Warnings & Anomalies:** ${warnings.length} items flagged
+- **Critical Failures:** ${errors.length} errors encountered
 - **Deduplication Rate:** ${totalDuplicates} redundant payloads ignored
 
 ### Primary Diagnostic Takeaways
