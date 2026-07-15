@@ -11,6 +11,7 @@ export class ExportManagerService {
     // 1. KPI Summary Sheet
     const summaryData = [
       { Metric: 'Total Webhook Events', Value: report.totalEvents },
+      { Metric: 'Successful Webhook Runs', Value: report.transactions.filter(tx => tx.status === 'success' || tx.status === 'warning').length },
       { Metric: 'Warnings Count', Value: report.warningsCount },
       { Metric: 'Errors Count', Value: report.errorsCount },
       { Metric: 'Patients Affected', Value: report.patientsAffected.length },
@@ -21,7 +22,7 @@ export class ExportManagerService {
     ];
     const wsSummary = XLSX.utils.json_to_sheet(summaryData);
     XLSX.utils.book_append_sheet(wb, wsSummary, 'Executive Summary');
-
+ 
     // 2. Transactions Sheet
     const transactionsData = report.transactions.map(tx => ({
       'Webhook ID': tx.webhookId,
@@ -32,7 +33,7 @@ export class ExportManagerService {
       'Start Time': tx.startTime,
       'End Time': tx.endTime,
       'Duration (ms)': tx.duration,
-      'Status': tx.status.toUpperCase(),
+      'Status': tx.status === 'error' ? 'FAILED' : (tx.status === 'warning' ? 'SUCCESS (WARNING)' : 'SUCCESS'),
       'ADT Match': tx.adtMatchStatus.toUpperCase(),
       'API Calls Count': tx.apisCalled.length,
       'Census Actions': tx.censusOperations.length,
@@ -88,7 +89,7 @@ export class ExportManagerService {
         `"${tx.facilityId || ''}"`,
         `"${tx.startTime || ''}"`,
         tx.duration,
-        `"${tx.status}"`,
+        `"${tx.status === 'error' ? 'FAILED' : (tx.status === 'warning' ? 'SUCCESS (WARNING)' : 'SUCCESS')}"`,
         `"${tx.adtMatchStatus}"`,
         tx.errors.length,
         tx.warnings.length
