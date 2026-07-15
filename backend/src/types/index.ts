@@ -4,6 +4,7 @@ export interface LogEntry {
   eventType?: string;
   patientId?: string;
   facilityId?: string;
+  pccFacilityId?: string;
   orgUuid?: string;
   message: string;
   endpoint?: string;
@@ -46,6 +47,7 @@ export interface WebhookTransaction {
   eventType: string;
   patientId?: string;
   facilityId?: string;
+  pccFacilityId?: string;
   orgUuid?: string;
   startTime: string;
   endTime: string;

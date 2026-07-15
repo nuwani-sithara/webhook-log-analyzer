@@ -413,7 +413,20 @@ export default function Home() {
                         </td>
                         <td className="px-5 py-3 text-indigo-400 font-semibold">{tx.eventType}</td>
                         <td className="px-5 py-3 font-mono text-[11px] text-slate-300">{tx.patientId || <span className="text-slate-600">N/A</span>}</td>
-                        <td className="px-5 py-3 font-mono text-[11px] text-slate-300">{tx.facilityId || <span className="text-slate-600">N/A</span>}</td>
+                        <td className="px-5 py-3 font-mono text-[11px] text-slate-300">
+                          {tx.facilityId ? (
+                            <span>
+                              {tx.facilityId}
+                              {tx.pccFacilityId && (
+                                <span className="text-[10px] text-slate-500 ml-1.5 font-normal">
+                                  (PCC: {tx.pccFacilityId})
+                                </span>
+                              )}
+                            </span>
+                          ) : (
+                            <span className="text-slate-600">N/A</span>
+                          )}
+                        </td>
                         <td className="px-5 py-3 text-slate-400">{tx.startTime}</td>
                         <td className="px-5 py-3 text-slate-300 font-medium font-mono">{tx.duration} ms</td>
                         <td className="px-5 py-3">

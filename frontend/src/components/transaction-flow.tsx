@@ -125,7 +125,14 @@ export default function TransactionFlow({ transaction }: TransactionFlowProps) {
             <MapPin className="h-4 w-4 text-emerald-400 flex-shrink-0" />
             <div className="truncate">
               <p className="text-xxs font-semibold uppercase text-slate-500">Facility</p>
-              <p className="font-mono text-slate-200 truncate">{transaction.facilityId || 'N/A'}</p>
+              <p className="font-mono text-slate-200 truncate">
+                {transaction.facilityId || 'N/A'}
+                {transaction.pccFacilityId && (
+                  <span className="text-[10px] text-slate-500 font-normal ml-1">
+                    (PCC: {transaction.pccFacilityId})
+                  </span>
+                )}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2 text-slate-400 bg-slate-950/40 p-2.5 rounded-lg border border-slate-900">

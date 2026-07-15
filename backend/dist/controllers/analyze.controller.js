@@ -35,14 +35,9 @@ export async function analyzeLogs(req, res) {
         let logLineCounter = 0;
         // 1. PDF Parsing page-by-page
         await PdfParserService.parsePdfPageByPage(fileBuffer, (pageNum, pageText) => {
-            const lines = pageText.split('\n');
-            for (const line of lines) {
-                if (line.trim().length > 0) {
-                    logLineCounter++;
-                    const parsed = LogParserService.parseLine(line, pageNum, logLineCounter);
-                    parsedLogs.push(parsed);
-                }
-            }
+            const pageParsed = LogParserService.parsePage(pageText, pageNum, logLineCounter);
+            parsedLogs.push(...pageParsed);
+            logLineCounter += pageParsed.length;
         });
         // 2. Correlate Events
         const rawTransactions = TransactionBuilderService.buildTransactions(parsedLogs);
